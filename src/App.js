@@ -11,7 +11,7 @@ function App() {
   const handleClickSearch = (e) => {
     e.preventDefault();
     try {
-      fetch('http://localhost:5000/shortUrl', {
+      fetch('https://url-shortener-owdt.onrender.com/shortUrl', {
         method: 'POST',
         mode: 'cors',
         headers: { 'content-type': 'application/json' },
