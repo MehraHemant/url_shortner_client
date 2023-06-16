@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 function Navbar() {
   const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode')==='true');
-  console.log(localStorage.getItem('darkMode'));
   const [left, setLeft] = useState('left-0');
   const [shadow, setShadow] = useState('left-0');
 
