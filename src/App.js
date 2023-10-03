@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import './App.css';
 import Navbar from './components/navbar';
+import spinner from './spinner.gif'
 
 function App() {
   const [hidden, setHidden] = useState(true);
@@ -8,21 +9,26 @@ function App() {
   const [url, setUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
 
-  const handleClickSearch = (e) => {
+
+  const handleClickSearch = async (e) => {
     e.preventDefault();
     try {
-      fetch('https://url-shortener-owdt.onrender.com/shortUrl', {
+      setLoading(true);
+      await fetch('http://localhost:5000/shortUrl', {
         method: 'POST',
         mode: 'cors',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ url: url })
-      }).then(res => { return res.json(); setLoading(true) })
+      }).then(res => { return res.json(); })
         .then(res => setShortUrl(res.shortUrl))
-        .then(() => { setLoading(false); setHidden(false) })
+        .then(() => { setHidden(false); setLoading(false) })
         .catch(err => console.error(err));
-    } catch(err){console.log(err)}
+    } catch (err) {
+      console.log(err)
+      setLoading(false);
+    }
   }
-  
+
   const shortUrlValue = useRef();
 
   const handleCopy = () => {
@@ -32,7 +38,12 @@ function App() {
     <div className="min-h-screen dark:bg-gray-900 space-y-10">
       <Navbar />
 
-
+      <div className={`${loading ? '' : 'hidden'} z-20 flex align-center justify-center w-screen h-screen fixed top-0 left-0 backdrop-blur-sm`}>
+        <div>
+        <img className={`z-30`} src={spinner} alt='' />
+        </div>
+      </div>
+      {/* POP-UP Notification */}
       <div className={`relative ${hidden ? 'hidden' : ''} z-10`}>
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -65,6 +76,7 @@ function App() {
         <div className='max-w-xl m-auto'>Look no further! urlShortener is here to simplify your online experience by shortening those lengthy addresses into sleek, manageable links.</div>
       </div>
 
+      {/* Search Bar Tab */}
       <div className='bg-gray-100  dark:bg-gray-950 rounded-sm w-4/5 md:w-2/3 lg:w-1/2 shadow-narrow dark:border-gray-100 m-auto p-6'>
         <div className='justify-center text-center space-y-5'>
           <div className='font-bold text-3xl font-[ubuntu] dark:text-white'>Paste the URL to be shortened</div>
